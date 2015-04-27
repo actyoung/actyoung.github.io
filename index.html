@@ -30,6 +30,652 @@
 <a id="actyounggithubio" class="anchor" href="#actyounggithubio" aria-hidden="true"><span class="octicon octicon-link"></span></a>actyoung.github.io</h1>
 
 <p>小虎的博客</p>
+
+<h1>
+<a id="http-接口设计指北" class="anchor" href="#http-%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%8C%97" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP 接口设计指北</h1>
+
+<ul>
+<li>文档主要目的是为设计接口时提供建议，使大家不必重复造 HTTP 协议已经完成的轮子</li>
+<li><strong>只是建议，不是必须遵从的要求</strong></li>
+<li>大家有什么问题想法或者建议欢迎 <a href="https://github.com/bolasblack/http-api-guide/issues/new">创建 Issue</a> 或者 <a href="https://github.com/bolasblack/http-api-guide/compare/">提交 Pull Request</a>
+</li>
+</ul>
+
+<h2>
+<a id="目录" class="anchor" href="#%E7%9B%AE%E5%BD%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>目录</h2>
+
+<ul>
+<li><a href="#user-content-http-%E5%8D%8F%E8%AE%AE">HTTP 协议</a></li>
+<li><a href="#user-content-url">URL</a></li>
+<li><a href="#user-content-%E7%A9%BA%E5%AD%97%E6%AE%B5">空字段</a></li>
+<li><a href="#user-content-%E5%9B%BD%E9%99%85%E5%8C%96">国际化</a></li>
+<li><a href="#user-content-%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95">请求方法</a></li>
+<li><a href="#user-content-%E7%8A%B6%E6%80%81%E7%A0%81">状态码</a></li>
+<li><a href="#user-content-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86">错误处理</a></li>
+<li><a href="#user-content-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81">身份验证</a></li>
+<li><a href="#user-content-%E8%B6%85%E6%96%87%E6%9C%AC%E9%A9%B1%E5%8A%A8%E5%92%8C%E8%B5%84%E6%BA%90%E5%8F%91%E7%8E%B0">超文本驱动和资源发现</a></li>
+<li><a href="#user-content-%E5%88%86%E9%A1%B5">分页</a></li>
+<li><a href="#user-content-%E6%95%B0%E6%8D%AE%E7%BC%93%E5%AD%98">数据缓存</a></li>
+<li><a href="#user-content-%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6">并发控制</a></li>
+<li><a href="#user-content-%E8%B7%A8%E5%9F%9F">跨域</a></li>
+<li><a href="#user-content-%E5%85%B6%E4%BB%96%E8%B5%84%E6%96%99">其他资料</a></li>
+<li><a href="#user-content-%E6%9B%B4%E7%BB%86%E8%8A%82%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%8D%97">更细节的接口设计指南</a></li>
+</ul>
+
+<h2>
+<a id="http-协议" class="anchor" href="#http-%E5%8D%8F%E8%AE%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP 协议</h2>
+
+<h3>
+<a id="http11" class="anchor" href="#http11" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP/1.1</h3>
+
+<p>2014 年 6 月的时候 IETF 已经正式的废弃了 <a href="http://tools.ietf.org/html/rfc2616">RFC 2616</a> ，将它拆分为六个单独的协议说明，并重点对原来语义模糊的部分进行了解释：</p>
+
+<ul>
+<li>RFC 7230 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7230">Message Syntax and Routing</a> - low-level message parsing and connection management</li>
+<li>RFC 7231 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7231">Semantics and Content</a> - methods, status codes and headers</li>
+<li>RFC 7232 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7232">Conditional Requests</a> - e.g., If-Modified-Since</li>
+<li>RFC 7233 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7233">Range Requests</a> - getting partial content</li>
+<li>RFC 7234 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7234">Caching</a> - browser and intermediary caches</li>
+<li>RFC 7235 - HTTP/1.1: <a href="http://tools.ietf.org/html/rfc7235">Authentication</a> - a framework for HTTP authentication</li>
+</ul>
+
+<p>相关资料：</p>
+
+<ul>
+<li>
+<a href="https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead">RFC2616 is Dead</a> （<a href="http://www.infoq.com/cn/news/2014/06/http-11-updated">中文版</a>）</li>
+</ul>
+
+<h3>
+<a id="http2" class="anchor" href="#http2" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP/2</h3>
+
+<p>HTTP 协议的 2.0 版本还没有正式发布，但目前已经基本稳定下来了。</p>
+
+<p><a href="http://http2.github.io/http2-spec/index.html#rfc.section.8">2.0 版本的设计目标是尽量在使用层面上保持与 1.1 版本的兼容，所以，虽然数据交换的格式发生了变化，但语义基本全部被保留下来了</a>。</p>
+
+<p>因此，作为使用者而言，我们并不需要为了支持 2.0 而大幅修改代码。</p>
+
+<ul>
+<li><a href="http://http2.github.io/http2-spec/index.html">HTTP/2 latest draft</a></li>
+<li><a href="http://http2.github.io/http2-spec/index.html#rfc.section.8.1.3">HTTP/1.1 和 HTTP/2 数据格式的对比</a></li>
+</ul>
+
+<h2>
+<a id="url" class="anchor" href="#url" aria-hidden="true"><span class="octicon octicon-link"></span></a>URL</h2>
+
+<p>HOST 地址：</p>
+
+<pre><code>https://api.example.com
+</code></pre>
+
+<p>所有 URI 都需要遵循 <a href="http://tools.ietf.org/html/rfc3986">RFC 3986</a> 的要求。</p>
+
+<p><strong>强烈建议 API 部署 SSL 证书</strong>，这样接口传递的数据的安全性才能都得一定的保障。</p>
+
+<h2>
+<a id="空字段" class="anchor" href="#%E7%A9%BA%E5%AD%97%E6%AE%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>空字段</h2>
+
+<p>接口遵循“输入宽容，输出严格”原则，输出的数据结构中空字段的值一律为 <code>null</code></p>
+
+<h2>
+<a id="国际化" class="anchor" href="#%E5%9B%BD%E9%99%85%E5%8C%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>国际化</h2>
+
+<h3>
+<a id="语言标签" class="anchor" href="#%E8%AF%AD%E8%A8%80%E6%A0%87%E7%AD%BE" aria-hidden="true"><span class="octicon octicon-link"></span></a>语言标签</h3>
+
+<p><a href="http://tools.ietf.org/html/rfc5646">RFC 5646</a> (<a href="http://tools.ietf.org/html/bcp47">BCP 47</a>) 规定的语言标签的格式如下：</p>
+
+<pre><code>language-script-region-variant-extension-privateuse
+</code></pre>
+
+<ol>
+<li>
+<code>language</code>：这部分使用的是 ISO 639-1, ISO 639-2, ISO 639-3, ISO 639-5 中定义的语言代码，必填
+
+<ul>
+<li>这个部分由 <code>primary-extlang</code> 两个部分构成</li>
+<li>
+<code>primary</code> 部分使用 ISO 639-1, ISO 639-2, ISO 639-3, ISO 639-5 中定义的语言代码，优先使用 ISO 639-1 中定义的条目，比如汉语 <code>zh</code>
+</li>
+<li>
+<code>extlang</code> 部分是在某些历史性的兼容性的原因，在需要非常细致地区别 <code>primary</code> 语言的时候使用，使用 ISO 639-3 中定义的三个字母的代码，比如普通话 <code>cmn</code>
+</li>
+<li>虽然 <code>language</code> 可以只写 <code>extlang</code> 省略 <code>primary</code> 部分，但出于兼容性的考虑，还是<strong>建议</strong>加上 <code>primary</code> 部分</li>
+</ul>
+</li>
+<li>
+<code>script</code>: 这部分使用的是 <a href="http://www.unicode.org/iso15924/codelists.html">ISO 15924</a> (<a href="http://zh.wikipedia.org/wiki/ISO_15924">Wikipedia</a>) 中定义的语言代码，比如简体汉字是 <code>zh-Hans</code> ，繁体汉字是 <code>zh-Hant</code> 。</li>
+<li>
+<code>region</code>: 这部分使用的是 ISO 3166-1 (<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">Wikipedia</a>) 中定义的地理区域代码，比如 <code>zh-Hans-CN</code> 就是中国大陆使用的简体中文。</li>
+<li>
+<code>variant</code>: 用来表示 <code>extlang</code> 的定义里没有包含的方言，具体的使用方法可以参考 <a href="http://tools.ietf.org/html/rfc5646#section-2.2.5">RFC 5646</a> 。</li>
+<li>
+<code>extension</code>: 用来为自己的应用做一些语言上的额外的扩展，具体的使用方法可以参考 <a href="http://tools.ietf.org/html/rfc5646#section-2.2.6">RFC 5646</a> 。</li>
+<li>
+<code>privateuse</code>: 用来表示私有协议中约定的一些语言上的区别，具体的使用方法可以参考 <a href="http://tools.ietf.org/html/rfc5646#section-2.2.7">RFC 5646</a> 。</li>
+</ol>
+
+<p>其中只有 <code>language</code> 部分是必须的，其他部分都是可选的；不过为了便于编写程序，建议设计接口时约定语言标签的结构，比如统一使用 <code>language-script-region</code> 的形式（ <code>zh-Hans-CN</code>, <code>zh-Hant-HK</code> 等等）。</p>
+
+<p>语言标签是大小写不敏感的，但按照惯例，建议 <code>script</code> 部分首字母大写， <code>region</code> 部分全部大写，其余部分全部小写。</p>
+
+<p><strong>有一点需要注意，任何合法的标签都必须经过 IANA 的认证，已通过认证的标签可以在<a href="http://www.iana.org/assignments/language-subtag-registry">这个网页</a>查到。此外，网上还有一个非官方的<a href="http://people.w3.org/rishida/utils/subtags/">标签搜索引擎</a>。</strong></p>
+
+<p>相关资料：</p>
+
+<ul>
+<li>ISO 639-1 Code List (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">Wikipedia</a>)</li>
+<li>
+<a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2 Code List</a> (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes">Wikipedia</a>)</li>
+<li><a href="http://www-01.sil.org/iso639-3/codes.asp?order=639_3&amp;letter=%25">ISO 639-3 Code List</a></li>
+<li>
+<a href="http://www.loc.gov/standards/iso639-5/id.php">ISO 639-5 Code List</a> (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-5_codes">Wikipedia</a>)</li>
+<li>
+<a href="http://www-01.sil.org/iso639-3/macrolanguages.asp">ISO 639-3 Macrolanguage Mappings</a> (<a href="https://en.wikipedia.org/wiki/ISO_639_macrolanguage">Wikipedia</a>)</li>
+<li><a href="http://www-01.sil.org/iso639-3/relationship.asp">Relationship between ISO 639-3 and the other parts of ISO 639</a></li>
+<li><a href="http://www.zhihu.com/question/20797118">网页头部的声明应该是用 lang="zh" 还是 lang="zh-cn"？ - 知乎</a></li>
+<li><a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag - Wikipedia</a></li>
+<li>
+<a href="http://www.ruanyifeng.com/blog/2008/02/codes_for_language_names.html">语种名称代码</a> ：文中对带有方言（ <code>extlang</code> ）部分的标签介绍有误</li>
+<li><a href="http://www.w3.org/International/articles/language-tags/">Language tags in HTML and XML</a></li>
+<li><a href="http://www.w3.org/International/questions/qa-choosing-language-tags">Choosing a Language Tag</a></li>
+</ul>
+
+<h3>
+<a id="时区" class="anchor" href="#%E6%97%B6%E5%8C%BA" aria-hidden="true"><span class="octicon octicon-link"></span></a>时区</h3>
+
+<p>客户端请求服务器时，如果对时间有特殊要求（如某段时间每天的统计信息），则可以参考 <a href="http://tools.ietf.org/html/draft-sharhalakis-httptz-05">IETF 相关草案</a> 增加请求头 <code>Timezone</code> 。</p>
+
+<pre><code>Timezone: 2007-06-12T23:48:22+0800
+// OR
+Timezone: 1977-07-30T12:00:11+0200;;Europe/Athens
+</code></pre>
+
+<p>时区的名称可以参考 <a href="http://www.iana.org/time-zones">tz datebase</a>(<a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">Wikipedia</a>) 。</p>
+
+<p>如果客户端请求时没有指定相应的时区，则服务端默认使用 <a href="http://zh.wikipedia.org/wiki/%E5%8D%8F%E8%B0%83%E4%B8%96%E7%95%8C%E6%97%B6">UTC</a> 时间返回相应数据。</p>
+
+<p>PS 考虑到存在<a href="https://en.wikipedia.org/wiki/Daylight_saving_time">夏时制</a>这种东西，所以不推荐客户端在请求时使用 Offset 。</p>
+
+<h3>
+<a id="时间格式" class="anchor" href="#%E6%97%B6%E9%97%B4%E6%A0%BC%E5%BC%8F" aria-hidden="true"><span class="octicon octicon-link"></span></a>时间格式</h3>
+
+<p>时间格式遵循 <a href="https://www.iso.org/obp/ui/#iso:std:iso:8601:ed-3:v1:en">ISO 8601</a>(<a href="https://en.wikipedia.org/wiki/ISO_8601">Wikipedia</a>) 建议的格式：</p>
+
+<ul>
+<li>日期 <code>2014-07-09</code>
+</li>
+<li>时间 <code>14:31:22+0800</code>
+</li>
+<li>具体时间 <code>2007-11-06T16:34:41Z</code>
+</li>
+<li>持续时间 <code>P1Y3M5DT6H7M30S</code> （表示在一年三个月五天六小时七分三十秒内）</li>
+<li>时间区间 <code>2007-03-01T13:00:00Z/2008-05-11T15:30:00Z</code> 、 <code>2007-03-01T13:00:00Z/P1Y2M10DT2H30M</code> 、 <code>P1Y2M10DT2H30M/2008-05-11T15:30:00Z</code>
+</li>
+<li>重复时间 <code>R3/2004-05-06T13:00:00+08/P0Y6M5DT3H0M0S</code> （表示从2004年5月6日北京时间下午1点起，在半年零5天3小时内，重复3次）</li>
+</ul>
+
+<p>相关资料：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/522251/whats-the-difference-between-iso-8601-and-rfc-3339-date-formats">What's the difference between ISO 8601 and RFC 3339 Date Formats?</a></li>
+<li><a href="https://github.com/darcyliu/google-styleguide/blob/master/JSONStyleGuide.md#%E5%B1%9E%E6%80%A7%E5%80%BC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">JSON风格指南 - Google 风格指南（中文版）</a></li>
+</ul>
+
+<h3>
+<a id="货币名称" class="anchor" href="#%E8%B4%A7%E5%B8%81%E5%90%8D%E7%A7%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>货币名称</h3>
+
+<p>货币名称可以参考 ISO 4217(<a href="http://en.wikipedia.org/wiki/ISO_4217">Wikipedia</a>) 中的约定，标准为货币名称规定了三个字母的货币代码，其中的前两个字母是 ISO 3166-1(<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">Wikipedia</a>) 中定义的双字母国家代码，第三个字母通常是货币的首字母。在货币上使用这些代码消除了货币名称（比如 dollar ）或符号（比如 $ ）的歧义。</p>
+
+<p>相关资料：</p>
+
+<ul>
+<li>《RESTful Web Services Cookbook 中文版》 3.9 节《如何在表述中使用可移植的数据格式》</li>
+</ul>
+
+<h2>
+<a id="请求方法" class="anchor" href="#%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>请求方法</h2>
+
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE#.E8.AF.B7.E6.B1.82.E6.96.B9.E6.B3.95">维基百科</a></li>
+<li>如果请求头中存在 <code>X-HTTP-Method-Override</code> 或参数中存在 <code>_method</code>（拥有更高权重），且值为 <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, <code>PATCH</code>, <code>OPTION</code>, <code>HEAD</code> 之一，则视作相应的请求方式进行处理</li>
+<li>
+<code>GET</code>, <code>DELETE</code>, <code>HEAD</code> 方法，参数风格为标准的 <code>GET</code> 风格的参数，如 <code>url?a=1&amp;b=2</code>
+</li>
+<li>
+<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>OPTION</code> 方法
+
+<ul>
+<li>默认情况下请求实体会被视作标准 json 字符串进行处理，当然，依旧推荐设置头信息的 <code>Content-Type</code> 为 <code>application/json</code>
+</li>
+<li>在一些特殊接口中（会在文档中说明），可能允许 <code>Content-Type</code> 为 <code>application/x-www-form-urlencoded</code> 或者 <code>multipart/form-data</code> ，此时请求实体会被视作标准 <code>POST</code> 风格的参数进行处理</li>
+</ul>
+</li>
+</ul>
+
+<p>关于方法语义的说明：</p>
+
+<ul>
+<li>
+<code>OPTIONS</code> 用于获取资源支持的所有 HTTP 方法</li>
+<li>
+<code>HEAD</code> 用于只获取请求某个资源返回的头信息</li>
+<li>
+<code>GET</code> 用于从服务器获取某个资源的信息
+
+<ul>
+<li>完成请求后返回状态码 <code>200 OK</code>
+</li>
+<li>完成请求后需要返回被请求的资源详细信息</li>
+</ul>
+</li>
+<li>
+<code>POST</code> 用于创建新资源
+
+<ul>
+<li>创建完成后返回状态码 <code>201 Created</code>
+</li>
+<li>完成请求后需要返回被创建的资源详细信息</li>
+</ul>
+</li>
+<li>
+<code>PUT</code> 用于完整的替换资源或者创建指定身份的资源，比如创建 id 为 123 的某个资源
+
+<ul>
+<li>如果是创建了资源，则返回 <code>201 Created</code>
+</li>
+<li>如果是替换了资源，则返回 <code>200 OK</code>
+</li>
+<li>完成请求后需要返回被修改的资源详细信息</li>
+</ul>
+</li>
+<li>
+<code>PATCH</code> 用于局部更新资源
+
+<ul>
+<li>完成请求后返回状态码 <code>200 OK</code>
+</li>
+<li>完成请求后需要返回被修改的资源详细信息</li>
+</ul>
+</li>
+<li>
+<code>DELETE</code> 用于删除某个资源
+
+<ul>
+<li>完成请求后返回状态码 <code>204 No Content</code>
+</li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="状态码" class="anchor" href="#%E7%8A%B6%E6%80%81%E7%A0%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>状态码</h2>
+
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">维基百科上的《 HTTP 状态码》词条</a></li>
+<li>
+<a href="http://tools.ietf.org/html/rfc4918">RFC 4918</a> - 422 状态码的来源</li>
+<li>
+<a href="http://tools.ietf.org/html/rfc5789">RFC 5789</a> - PATCH 方法的定义</li>
+<li>
+<a href="http://tools.ietf.org/html/rfc6585">RFC 6585</a> - 新增的四个 HTTP 状态码，<a href="http://www.oschina.net/news/28660/new-http-status-codes">中文版</a>
+</li>
+<li><a href="http://stackoverflow.com/questions/2467664/do-i-need-to-use-http-redirect-code-302-or-307">Do I need to use http redirect code 302 or 307? - Stack Overflow</a></li>
+<li><a href="http://stackoverflow.com/questions/16133923/400-vs-422-response-to-post-of-data">400 vs 422 response to POST of data</a></li>
+</ul>
+
+<h3>
+<a id="请求成功" class="anchor" href="#%E8%AF%B7%E6%B1%82%E6%88%90%E5%8A%9F" aria-hidden="true"><span class="octicon octicon-link"></span></a>请求成功</h3>
+
+<ul>
+<li>200 <strong>OK</strong> : 请求执行成功并返回相应数据，如 <code>GET</code> 成功</li>
+<li>201 <strong>Created</strong> : 对象创建成功并返回相应资源数据，如 <code>POST</code> 成功；创建完成后响应头中应该携带头标 <code>Location</code> ，指向新建资源的地址</li>
+<li>204 <strong>No Content</strong> : 请求执行成功，不返回相应资源数据，如 <code>PATCH</code> ， <code>DELETE</code> 成功</li>
+</ul>
+
+<h3>
+<a id="重定向" class="anchor" href="#%E9%87%8D%E5%AE%9A%E5%90%91" aria-hidden="true"><span class="octicon octicon-link"></span></a>重定向</h3>
+
+<p><strong>重定向的新地址都需要在响应头 <code>Location</code> 中返回</strong></p>
+
+<ul>
+<li>301 <strong>Moved Permanently</strong> : 被请求的资源已永久移动到新位置</li>
+<li>302 <strong>Found</strong> : 请求的资源现在临时从不同的 URI 响应请求</li>
+<li>303 <strong>See Other</strong> : 对应当前请求的响应可以在另一个 URI 上被找到，客户端应该使用 <code>GET</code> 方法进行请求</li>
+<li>307 <strong>Temporary Redirect</strong> : 对应当前请求的响应可以在另一个 URI 上被找到，客户端应该保持原有的请求方法进行请求</li>
+</ul>
+
+<h3>
+<a id="客户端出错" class="anchor" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%87%BA%E9%94%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>客户端出错</h3>
+
+<ul>
+<li>400 <strong>Bad Request</strong> : 请求体包含语法错误</li>
+<li>401 <strong>Unauthorized</strong> : 需要验证用户身份，如果服务器就算是身份验证后也不允许客户访问资源，应该响应 <code>403 Forbidden</code>
+</li>
+<li>403 <strong>Forbidden</strong> : 服务器拒绝执行</li>
+<li>404 <strong>Not Found</strong> : 找不到目标资源</li>
+<li>405 <strong>Method Not Allowed</strong> : 不允许执行目标方法，响应中应该带有 <code>Allow</code> 头，内容为对该资源有效的 HTTP 方法</li>
+<li>406 <strong>Not Acceptable</strong> : 服务器不支持客户端请求的内容格式（比如客户端请求 JSON 格式的数据，但服务器只能提供 XML 格式的数据）</li>
+<li>409 <strong>Conflict</strong> : 请求操作和资源的当前状态存在冲突</li>
+<li>410 <strong>Gone</strong> : 被请求的资源已被删除</li>
+<li>412 <strong>Precondition Failed</strong> : 服务器在验证在请求的头字段中给出先决条件时，没能满足其中的一个或多个。主要使用场景在于实现<a href="#user-content-%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6">并发控制</a>
+</li>
+<li>413 <strong>Request Entity Too Large</strong> : <code>POST</code> 或者 <code>PUT</code> 请求的消息实体过大</li>
+<li>415 <strong>Unsupported Media Type</strong> : 服务器不支持请求中提交的数据的格式</li>
+<li>422 <strong>Unprocessable Entity</strong> : 请求格式正确，但是由于含有语义错误，无法响应</li>
+<li>428 <strong>Precondition Required</strong> : 要求先决条件，如果想要请求能成功必须满足一些预设的条件</li>
+</ul>
+
+<h3>
+<a id="服务端出错" class="anchor" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%87%BA%E9%94%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>服务端出错</h3>
+
+<ul>
+<li>500 <strong>Internal Server Error</strong> : 服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。</li>
+<li>501 <strong>Not Implemented</strong> : 服务器不支持当前请求所需要的某个功能。</li>
+<li>502 <strong>Bad Gateway</strong> : 作为网关或者代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应。</li>
+<li>503 <strong>Service Unavailable</strong> : 由于临时的服务器维护或者过载，服务器当前无法处理请求。这个状况是临时的，并且将在一段时间以后恢复。如果能够预计延迟时间，那么响应中可以包含一个 <code>Retry-After</code> 头用以标明这个延迟时间（内容可以为数字，单位为秒；或者是一个 <a href="http://tools.ietf.org/html/rfc2616#section-3.3">HTTP 协议指定的时间格式</a>）。如果没有给出这个 <code>Retry-After</code> 信息，那么客户端应当以处理 500 响应的方式处理它。</li>
+</ul>
+
+<p><code>501</code> 与 <code>405</code> 的区别是：<code>405</code> 是表示服务端不允许客户端这么做，<code>501</code> 是表示客户端或许可以这么做，但服务端还没有实现这个功能</p>
+
+<h2>
+<a id="错误处理" class="anchor" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>错误处理</h2>
+
+<p>在调用接口的过程中，可能出现下列几种错误情况：</p>
+
+<ul>
+<li>
+<p>服务器维护中，<code>503</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">503</span> Service Unavailable
+<span class="pl-s"><span class="pl-v">Retry-After:</span> 3600</span>
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 41</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Service In the maintenance<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>发送了无法转化的请求体，<code>400</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">400</span> Bad Request
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 35</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Problems parsing JSON<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>服务到期（比如付费的增值服务等）， <code>403</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">403</span> Forbidden
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 29</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Service expired<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>因为某些原因不允许访问（比如被 ban ），<code>403</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">403</span> Forbidden
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 29</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Account blocked<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>权限不够，<code>403</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">403</span> Forbidden
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 31</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Permission denied<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>需要修改的资源不存在， <code>404</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">404</span> Not Found
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 32</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Resource not found<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>缺少了必要的头信息，<code>428</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">428</span> Precondition Required
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 35</span>
+
+{<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Header User-Agent is required<span class="pl-pds">"</span></span>}</pre></div>
+</li>
+<li>
+<p>发送了非法的资源，<code>422</code> 状态码</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">422</span> Unprocessable Entity
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 149</span>
+
+{
+  <span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Validation Failed<span class="pl-pds">"</span></span>,
+  <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span>: [
+    {
+      <span class="pl-s"><span class="pl-pds">"</span>resource<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Issue<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>field<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>missing_field<span class="pl-pds">"</span></span>
+    }
+  ]
+}</pre></div>
+</li>
+</ul>
+
+<p>所有的 <code>error</code> 哈希表都有 <code>resource</code>, <code>field</code>, <code>code</code> 字段，以便于定位错误，<code>code</code> 字段则用于表示错误类型：</p>
+
+<ul>
+<li>
+<code>missing</code>: 说明某个字段的值代表的资源不存在</li>
+<li>
+<code>invalid</code>: 某个字段的值非法，接口文档中会提供相应的信息</li>
+<li>
+<code>missing_field</code>: 缺失某个必须的字段</li>
+<li>
+<code>already_exist</code>: 发送的资源中的某个字段的值和服务器中已有的某个资源冲突，常见于某些值全局唯一的字段，比如 @ 用的用户名（这个错误我有纠结，因为其实有 409 状态码可以表示，但是在修改某个资源时，很一般显然请求中不止是一种错误，如果是 409 的话，多种错误的场景就不合适了）</li>
+</ul>
+
+<h2>
+<a id="身份验证" class="anchor" href="#%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81" aria-hidden="true"><span class="octicon octicon-link"></span></a>身份验证</h2>
+
+<p>部分接口需要通过某种身份验证方式才能请求成功（这些接口<strong>应该</strong>在文档中标注出来），合适的身份验证解决方案目前有两种：</p>
+
+<ul>
+<li>
+<a href="http://zh.wikipedia.org/wiki/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81">HTTP 基本认证</a>，<strong>只有在部署了 SSL 证书的情况下才可以使用，否则用户密码会有暴露的风险，当然，最好不要使用</strong>
+</li>
+<li>
+<a href="https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-25">JSON Web Token</a> ，支持通过登录接口使用账号密码获取，在请求接口时使用 <code>Authorization: Bearer #{token}</code> 头标或者 <code>token</code> 参数的值的方式进行验证。
+
+<ul>
+<li><a href="http://angular-tips.com/blog/2014/05/json-web-tokens-introduction/">Json Web Tokens: Introduction</a></li>
+<li><a href="http://angular-tips.com/blog/2014/05/json-web-tokens-examples/">Json Web Tokens: Examples</a></li>
+<li><a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">Cookies vs Tokens. Getting auth right with Angular.JS</a></li>
+</ul>
+</li>
+<li>
+<a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a>
+
+<ul>
+<li><a href="http://oauth.net/2/">官网</a></li>
+<li>
+<a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0 - 阮一峰</a> 以及对<a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html#comment-323002">文中 <code>state</code> 参数的介绍的修正</a>
+</li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="超文本驱动和资源发现" class="anchor" href="#%E8%B6%85%E6%96%87%E6%9C%AC%E9%A9%B1%E5%8A%A8%E5%92%8C%E8%B5%84%E6%BA%90%E5%8F%91%E7%8E%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>超文本驱动和资源发现</h2>
+
+<p>REST 服务的要求之一，客户端不再需要将某些接口的 URI 硬编码在代码中，唯一需要存储的只是 API 的 HOST 地址，能够非常有效的降低客户端与服务端之间的耦合，服务端对 URI 的任何改动都不会影响到客户端的稳定。</p>
+
+<p>目前只有几种方案差强人意：</p>
+
+<ul>
+<li>
+<a href="http://tools.ietf.org/html/draft-kelly-json-hal-06">JSON HAL 草案</a> ，示例可以参考 <a href="http://stateless.co/hal_specification.html">JSON HAL 作者自己的介绍</a>
+</li>
+<li>
+<a href="https://developer.github.com/v3/#hypermedia">GitHub API 使用的方案</a> ，应该是一种 JSON HAL 的变体</li>
+<li>
+<a href="http://jsonapi.org/">JSON API 方案</a>  （这里有 <a href="https://github.com/justjavac">@迷渡</a> 发起的 <a href="http://jsonapi.org.cn/">中文版</a> ），另外一种类似 JSON HAL 的方案，不过某些方面（比如甚至也考虑到了 URL ）考虑的比 JSON HAL 更为具体</li>
+</ul>
+
+<p>目前来看应该是合并 JSON API 和 JSON HAL 两个方案的做法，各取所长，能够得到一个相对理想的方案</p>
+
+<h2>
+<a id="分页" class="anchor" href="#%E5%88%86%E9%A1%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>分页</h2>
+
+<p>请求某个资源集合时，可以通过指定 <code>count</code> 参数来指定每页的资源数量，通过 <code>page</code> 参数指定页码，或根据 <code>last_cursor</code> 参数指定上一页最后一个资源的标识符。</p>
+
+<p>如果没有传递 <code>count</code> 参数或者 <code>count</code> 参数的值为空，则使用默认值 20 ， <code>count</code> 参数的最大上限为 100 。</p>
+
+<p>如何同时传递了 <code>last_cursor</code> 和 <code>page</code> 参数，则使用 <code>page</code> 。</p>
+
+<p>分页的相关信息会包含在 <a href="http://tools.ietf.org/html/rfc5988">Link Header</a> 和 <code>X-Total-Count</code> 中。</p>
+
+<p>如果是第一页或者是最后一页时，不会返回 <code>previous</code> 和 <code>next</code> 的 Link 。</p>
+
+<div class="highlight highlight-http"><pre>HTTP/<span class="pl-c1">1.1</span> <span class="pl-c1">200</span> OK
+<span class="pl-s"><span class="pl-v">X-Total-Count:</span> 542</span>
+<span class="pl-s"><span class="pl-v">Link:</span> &lt;http://api.example.com/#{RESOURCE_URI}?last_cursor=&amp;count=100&gt;; rel="first",</span>
+      &lt;http://api.example.com/#{<span class="pl-ii">RESOURCE_URI</span>}?last_cursor=<span class="pl-c1">200</span>&amp;count=<span class="pl-c1">100</span>&gt;; rel=<span class="pl-s"><span class="pl-pds">"</span>last<span class="pl-pds">"</span></span>
+      &lt;http://api.example.com/#{<span class="pl-ii">RESOURCE_URI</span>}?last_cursor=<span class="pl-c1">90</span>&amp;count=<span class="pl-c1">100</span>&gt;; rel=<span class="pl-s"><span class="pl-pds">"</span>previous<span class="pl-pds">"</span></span>,
+      &lt;http://api.example.com/#{<span class="pl-ii">RESOURCE_URI</span>}?last_cursor=<span class="pl-c1">120</span>&amp;count=<span class="pl-c1">100</span>&gt;; rel=<span class="pl-s"><span class="pl-pds">"</span>next<span class="pl-pds">"</span></span>,
+
+[
+  <span class="pl-ii">...</span>
+]</pre></div>
+
+<p>相关资料：</p>
+
+<ul>
+<li><a href="http://tools.ietf.org/html/rfc5005#section-3">RFC 5005 第3节 <em>Paged Feeds</em></a></li>
+<li><a href="http://tools.ietf.org/html/rfc5988#section-6.2.2">RFC 5988 6.2.2节 <em>Initial Registry Contents</em></a></li>
+</ul>
+
+<h2>
+<a id="数据缓存" class="anchor" href="#%E6%95%B0%E6%8D%AE%E7%BC%93%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>数据缓存</h2>
+
+<p>大部分接口应该在响应头中携带 <code>Last-Modified</code> 和 <code>ETag</code> 信息，客户端可以在随后请求这些资源的时候，在请求头中使用 <code>If-Modified-Since</code> 或者 <code>If-None-Match</code> 两个头来确认资源是否经过修改。</p>
+
+<div class="highlight highlight-bash"><pre>$ curl -i http://api.example.com/#{RESOURCE_URI}
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+ETag: <span class="pl-s"><span class="pl-pds">"</span>644b5b0155e6404a9cc4bd9d8b1ae730<span class="pl-pds">"</span></span>
+Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT
+
+$ curl -i http://api.example.com/#{RESOURCE_URI} -H <span class="pl-s"><span class="pl-pds">"</span>If-Modified-Since: Thu, 05 Jul 2012 15:31:30 GMT<span class="pl-pds">"</span></span>
+HTTP/1.1 304 Not Modified
+Cache-Control: private, max-age=60
+Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT
+
+$ curl -i http://api.example.com/#{RESOURCE_URI} -H <span class="pl-s"><span class="pl-pds">'</span>If-None-Match: "644b5b0155e6404a9cc4bd9d8b1ae730"<span class="pl-pds">'</span></span>
+HTTP/1.1 304 Not Modified
+Cache-Control: private, max-age=60
+ETag: <span class="pl-s"><span class="pl-pds">"</span>644b5b0155e6404a9cc4bd9d8b1ae730<span class="pl-pds">"</span></span>
+Last-Modified: Thu, 05 Jul 2012 15:31:30 GMT</pre></div>
+
+<h2>
+<a id="并发控制" class="anchor" href="#%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6" aria-hidden="true"><span class="octicon octicon-link"></span></a>并发控制</h2>
+
+<p>不严谨的实现，或者缺少并发控制的 <code>PUT</code> 和 <code>PATCH</code> 请求可能导致 “更新丢失”。这个时候可以使用 <code>Last-Modified</code> 和/或 <code>ETag</code> 头来实现条件请求，支持乐观并发控制。</p>
+
+<p>下文只考虑使用 <code>PUT</code> 和 <code>PATCH</code> 方法更新资源的情况。</p>
+
+<ul>
+<li>客户端发起的请求如果没有包含 <code>If-Unmodified-Since</code> 或者 <code>If-Match</code> 头，那就返回状态码 <code>403 Forbidden</code> ，在响应正文中解释为何返回该状态码</li>
+<li>客户端发起的请求提供的 <code>If-Unmodified-Since</code> 或者 <code>If-Match</code> 头与服务器记录的实际修改时间和 <code>ETag</code> 值不匹配的时候，返回状态码 <code>412 Precondition Failed</code>
+</li>
+<li>客户端发起的请求提供的条件符合实际值，那就更新资源，响应 <code>200 OK</code> 或者 <code>204 No Content</code> ，并且包含更新过的 <code>Last-Modified</code> 和/或 <code>ETag</code> 头，同时包含 <code>Content-Location</code> 头，其值为更新后的资源 URI</li>
+</ul>
+
+<p>相关资料：</p>
+
+<ul>
+<li>《RESTful Web Services Cookbook 中文版》 10.4 节 《如何在服务器端实现条件 PUT 请求》</li>
+<li><a href="https://tools.ietf.org/html/rfc7232">RFC 7232 "Conditional Requests"</a></li>
+</ul>
+
+<h2>
+<a id="跨域" class="anchor" href="#%E8%B7%A8%E5%9F%9F" aria-hidden="true"><span class="octicon octicon-link"></span></a>跨域</h2>
+
+<h3>
+<a id="cors" class="anchor" href="#cors" aria-hidden="true"><span class="octicon octicon-link"></span></a>CORS</h3>
+
+<p>接口支持<a href="http://www.w3.org/TR/cors">“跨域资源共享”（Cross Origin Resource Sharing, CORS）</a>，<a href="http://enable-cors.org/">这里</a>和<a href="http://code.google.com/p/html5security/wiki/CrossOriginRequestSecurity">这里</a>和<a href="http://newhtml.net/using-cors/">这份中文资料</a>有一些指导性的资料。</p>
+
+<p>简单示例：</p>
+
+<div class="highlight highlight-bash"><pre>$ curl -i https://api.example.com -H <span class="pl-s"><span class="pl-pds">"</span>Origin: http://example.com<span class="pl-pds">"</span></span>
+HTTP/1.1 302 Found</pre></div>
+
+<div class="highlight highlight-bash"><pre>$ curl -i https://api.example.com -H <span class="pl-s"><span class="pl-pds">"</span>Origin: http://example.com<span class="pl-pds">"</span></span>
+HTTP/1.1 302 Found
+Access-Control-Allow-Origin: <span class="pl-k">*</span>
+Access-Control-Expose-Headers: ETag, Link, X-Total-Count
+Access-Control-Allow-Credentials: <span class="pl-c1">true</span></pre></div>
+
+<p>预检请求的响应示例：</p>
+
+<div class="highlight highlight-bash"><pre>$ curl -i https://api.example.com -H <span class="pl-s"><span class="pl-pds">"</span>Origin: http://example.com<span class="pl-pds">"</span></span> -X OPTIONS
+HTTP/1.1 302 Found
+Access-Control-Allow-Origin: <span class="pl-k">*</span>
+Access-Control-Allow-Headers: Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-Requested-With
+Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE
+Access-Control-Expose-Headers: ETag, Link, X-Total-Count
+Access-Control-Max-Age: 86400
+Access-Control-Allow-Credentials: <span class="pl-c1">true</span></pre></div>
+
+<h3>
+<a id="json-p" class="anchor" href="#json-p" aria-hidden="true"><span class="octicon octicon-link"></span></a>JSON-P</h3>
+
+<p>如果在任何 <code>GET</code> 请求中带有参数 <code>callback</code> ，且值为非空字符串，那么接口将返回如下格式的数据</p>
+
+<div class="highlight highlight-bash"><pre>$ curl http://api.example.com/#{RESOURCE_URI}<span class="pl-k">?</span>callback=foo</pre></div>
+
+<div class="highlight highlight-javascript"><pre>foo({
+  <span class="pl-s"><span class="pl-pds">"</span>meta<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>status<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">200</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>X-Total-Count<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">542</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>Link<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+      {<span class="pl-s"><span class="pl-pds">"</span>href<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://api.example.com/#{RESOURCE_URI}?cursor=0&amp;count=100<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>first<span class="pl-pds">"</span></span>},
+      {<span class="pl-s"><span class="pl-pds">"</span>href<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://api.example.com/#{RESOURCE_URI}?cursor=90&amp;count=100<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>prev<span class="pl-pds">"</span></span>},
+      {<span class="pl-s"><span class="pl-pds">"</span>href<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://api.example.com/#{RESOURCE_URI}?cursor=120&amp;count=100<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>next<span class="pl-pds">"</span></span>},
+      {<span class="pl-s"><span class="pl-pds">"</span>href<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>http://api.example.com/#{RESOURCE_URI}?cursor=200&amp;count=100<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>rel<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>last<span class="pl-pds">"</span></span>}
+    ]
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c">// data</span>
+})</pre></div>
+
+<h2>
+<a id="其他资料" class="anchor" href="#%E5%85%B6%E4%BB%96%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>其他资料</h2>
+
+<ul>
+<li><a href="https://tools.ietf.org/wg/httpbis/">Httpbis Status Pages</a></li>
+<li><a href="http://www.iana.org/assignments/message-headers/message-headers.xhtml">所有在 IANA 注册的消息头和相关标准的列表</a></li>
+</ul>
+
+<h2>
+<a id="更细节的接口设计指南" class="anchor" href="#%E6%9B%B4%E7%BB%86%E8%8A%82%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%8D%97" aria-hidden="true"><span class="octicon octicon-link"></span></a>更细节的接口设计指南</h2>
+
+<p>这里还有一些其他参考资料：</p>
+
+<ul>
+<li>推荐参考文档 <a href="https://github.com/interagent/http-api-design/">HTTP API Design Guide</a> 来设计 REST 风格的 API ，只有以下两点我个人并不建议参考：
+
+<ul>
+<li>
+<a href="https://github.com/interagent/http-api-design/#use-consistent-path-formats">Use consistent path formats</a>
+还是不建议将动作写在 URL 中，像文档中的情况，可以将这个行为抽象成一个事务资源 <code>POST /runs/:run_id/stop-logs</code> 或者 <code>POST /runs/:run_id/stoppers</code> 来解决</li>
+<li>
+<a href="https://github.com/interagent/http-api-design/#paginate-with-ranges">Paginate with Ranges</a>
+确实是一个巧妙的设计，但似乎并不符合 <code>Content-Range</code> 的设计意图，而且有可能和需要使用到 <code>Content-Range</code> 的正常场景冲突（虽然几乎不可能），所以不推荐</li>
+</ul>
+</li>
+<li><a href="http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api">Best Practices for Designing a Pragmatic RESTful API</a></li>
+<li><a href="http://restful-api-design.readthedocs.org/en/latest/">Thoughts on RESTful API Design</a></li>
+<li><a href="http://restcookbook.com/">The RESTful CookBook</a></li>
+</ul>
       </section>
     </div>
 
