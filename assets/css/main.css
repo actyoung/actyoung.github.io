@@ -379,19 +379,20 @@ a:hover {
   font-size: 8px;
 }
 
-.map-label--west {
-  top: 33%;
-  left: 13%;
+.map-label--north-america {
+  top: 31%;
+  right: 12%;
 }
 
-.map-label--east {
+.map-label--china {
   top: 38%;
-  right: 9%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .map-label--europe {
-  top: 24%;
-  left: 50%;
+  top: 29%;
+  left: 25%;
 }
 
 .lead-story {
@@ -1018,7 +1019,8 @@ a:hover {
     font-size: 12px;
   }
 
-  .map-label--europe {
+  .map-label--europe,
+  .map-label--north-america {
     display: none;
   }
 
