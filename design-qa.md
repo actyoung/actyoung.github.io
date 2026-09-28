@@ -14,7 +14,7 @@ No actionable P0, P1, or P2 differences remain.
 - Fonts and typography: Songti SC/STSong retains the selected design's high-contrast editorial voice. The display headline is intentionally enlarged for the single-message holding state; metadata remains monospace and all copy wraps without clipping.
 - Spacing and layout rhythm: the notice uses the source's wide editorial frame, fine rules, left-aligned story hierarchy, and map-led composition. Desktop and mobile each fit exactly within one viewport with no horizontal overflow.
 - Colors and visual tokens: graphite black, paper white, cinnabar red, and brass are reused from the established site tokens. The background is darkened with solid opacity only; no gradient or glass treatment was added.
-- Image quality and asset fidelity: the China-centered Image2 map remains the sole full-bleed visual, is sharp at both tested sizes, and preserves the source art direction. No placeholder image, custom SVG, or CSS-drawn substitute is present.
+- Image quality and asset fidelity: the China-centered Image2 map remains the sole full-bleed visual, is sharp at both tested sizes, and preserves the source art direction. The new cinnabar `志` seal icon remains legible at 16, 32, 180, and 512 pixels. No placeholder image, custom SVG, or CSS-drawn substitute is present.
 - Copy and content: the page states `网站制作中` explicitly, while `山河既动，史笔未落` and `正在修志` preserve the publication voice. No launch date, subscription promise, or unfinished article link is exposed.
 - Interactions and accessibility: the holding page has no false CTA or dead navigation. The main landmark and heading hierarchy are present; unpublished post URLs return the same notice with HTTP 404. Browser console errors and warnings: none.
 
@@ -34,6 +34,15 @@ No actionable P0, P1, or P2 differences remain.
 - The side-by-side comparison confirms that the notice preserves the selected design's map asset, palette, typographic character, editorial rules, and restrained density while intentionally replacing article navigation with one clear construction message.
 - Focused regions were checked at full size for the masthead, display headline, explanatory copy, progress strip, footer, China-centered map crop, and mobile text wrapping. No additional cropped comparison was needed because each region was legible in the full-size captures.
 
+### Pass 3
+
+- [P1] The published HTML and stylesheet shared an unversioned asset URL while GitHub Pages served the CSS with a 600-second cache lifetime. A visitor could temporarily receive new markup with the previous stylesheet after deployment.
+  - Fix: added a GitHub build-revision query fingerprint to the stylesheet, map, favicon, and Apple touch icon URLs.
+  - Post-fix evidence: browser inspection shows versioned asset URLs at desktop and mobile sizes, with the correct `112px` and `54px` responsive display-heading rules applied.
+- [P2] The previous generic 16-pixel GitHub mark did not represent the publication.
+  - Fix: replaced it with an Image2-generated cinnabar seal carrying the exact `志` character and exported dedicated 16, 32, 180, and 512-pixel PNGs.
+  - Post-fix evidence: the 16 and 32-pixel exports were inspected directly and remain recognizable.
+
 ## Implementation Checklist
 
 - [x] Site-wide construction flag added.
@@ -42,6 +51,8 @@ No actionable P0, P1, or P2 differences remain.
 - [x] Search crawling paused through page metadata and `robots.txt`.
 - [x] Desktop and mobile layouts visually verified.
 - [x] Console, image loading, overflow, and direct post URL behavior checked.
+- [x] Versioned asset URLs prevent stale CSS after deployment.
+- [x] Branded favicon and Apple touch icon installed at dedicated sizes.
 - [x] Jekyll build and whitespace checks passed.
 
 ## Follow-up Polish

@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0d0f0e">
+    <meta name="application-name" content="赛博志">
+    <meta name="apple-mobile-web-app-title" content="赛博志">
+    {% if site.github and site.github.build_revision %}
+      {% assign asset_version = site.github.build_revision %}
+    {% else %}
+      {% capture asset_version %}{{ site.time | date: '%s' }}{% endcapture %}
+    {% endif %}
     {% if site.under_construction %}
       {% assign page_description = '赛博志正在编修。我们正整理事实、校订脉络，待篇章成形再与诸君相见。' %}
     {% else %}
@@ -21,8 +28,10 @@
     <meta property="og:image" content="{{ social_image | absolute_url }}">
     <meta name="twitter:card" content="summary_large_image">
     {% if site.under_construction %}<meta name="robots" content="noindex, nofollow">{% elsif page.noindex %}<meta name="robots" content="noindex">{% endif %}
-    <link rel="icon" type="image/png" href="{{ '/images/blacktocat.png' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/saibozhi-icon-32.png' | relative_url }}?v={{ asset_version | slice: 0, 8 }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/images/saibozhi-icon-16.png' | relative_url }}?v={{ asset_version | slice: 0, 8 }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/images/saibozhi-icon-180.png' | relative_url }}?v={{ asset_version | slice: 0, 8 }}">
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ asset_version | slice: 0, 8 }}">
   </head>
   <body{% if site.under_construction %} class="is-under-construction"{% endif %}>
     {% if site.under_construction %}
