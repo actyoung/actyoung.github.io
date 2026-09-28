@@ -1,11 +1,11 @@
-title: 小虎的博客
-description: 小虎的个人博客，记录技术实践、产品思考与持续学习。
+title: 赛博志
+description: 以史笔，书智能时代之变局。用章回体重述 AI 时代的技术新闻、势力消长与关键人物。
 url: https://actyoung.github.io
 baseurl: ""
 lang: zh-CN
 timezone: Asia/Shanghai
 author:
-  name: 小虎
+  name: 赛博志
   github: actyoung
 permalink: /posts/:title/
 markdown: kramdown
@@ -17,4 +17,3 @@ exclude:
   - Gemfile.lock
   - README.md
   - vendor
-

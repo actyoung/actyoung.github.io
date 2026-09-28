@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f4f6f3">
+    <meta name="theme-color" content="#0d0f0e">
     {% assign page_description = page.description | default: site.description %}
     <meta name="description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
     <title>{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}</title>
@@ -13,8 +13,9 @@
     <meta property="og:title" content="{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}">
     <meta property="og:description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
     <meta property="og:url" content="{{ page.url | absolute_url }}">
-    <meta property="og:image" content="https://github.com/actyoung.png?size=460">
-    <meta name="twitter:card" content="summary">
+    {% assign social_image = page.image | default: '/images/cyber-map/image-1.webp' %}
+    <meta property="og:image" content="{{ social_image | absolute_url }}">
+    <meta name="twitter:card" content="summary_large_image">
     {% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
     <link rel="icon" type="image/png" href="{{ '/images/blacktocat.png' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
@@ -22,30 +23,34 @@
   <body>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <header class="site-header">
-      <div class="shell site-header__inner">
-        <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="小虎的博客首页">
-          <span class="wordmark__mark" aria-hidden="true">虎</span>
-          <span>小虎的博客</span>
+      <div class="wide-shell masthead">
+        <p class="masthead__motto">技术如潮<br>时代有志</p>
+        <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="赛博志首页">
+          <span>赛博志</span>
+          <small>以史笔，书智能时代之变局</small>
         </a>
-        <nav aria-label="主导航">
-          <a href="{{ '/#articles' | relative_url }}">文章</a>
-          <a href="{{ '/about/' | relative_url }}">关于</a>
-          <a class="nav-github" href="https://github.com/actyoung" rel="me">
-            <img src="{{ '/images/blacktocat.png' | relative_url }}" alt="" width="16" height="16">
-            GitHub
-          </a>
-        </nav>
+        <p class="masthead__edition">
+          <time datetime="{{ site.time | date_to_xmlschema }}">{{ site.time | date: '%Y.%m.%d' }}</time>
+          <span>记录 · 思考 · 连接</span>
+        </p>
       </div>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="{{ '/#chronicle' | relative_url }}">纪事</a>
+        <a href="{{ '/#powers' | relative_url }}">势力</a>
+        <a href="{{ '/#figures' | relative_url }}">人物</a>
+        <a href="{{ '/#arsenal' | relative_url }}">兵器谱</a>
+        <a href="{{ '/about/' | relative_url }}">关于</a>
+      </nav>
     </header>
 
-    <main class="shell" id="main-content">
+    <main class="{% unless page.url == '/' %}shell {% endunless %}site-main" id="main-content">
       {{ content }}
     </main>
 
     <footer class="site-footer">
       <div class="shell site-footer__inner">
-        <p>&copy; {{ 'now' | date: '%Y' }} 小虎</p>
-        <p>由 GitHub Pages 发布</p>
+        <p>&copy; {{ 'now' | date: '%Y' }} 赛博志</p>
+        <p>事实为骨，演义为衣 · 由 GitHub Pages 发布</p>
       </div>
     </footer>
   </body>
