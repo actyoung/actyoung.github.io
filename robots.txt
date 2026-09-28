@@ -3,7 +3,8 @@ layout: null
 permalink: /robots.txt
 ---
 User-agent: *
-Allow: /
+{% if site.under_construction %}Disallow: /
+{% else %}Allow: /
 
 Sitemap: {{ '/sitemap.xml' | absolute_url }}
-
+{% endif %}

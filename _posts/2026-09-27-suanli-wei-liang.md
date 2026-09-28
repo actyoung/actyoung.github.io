@@ -6,6 +6,7 @@ description: "读懂芯片与算力新闻，先看供给、成本、能源与生
 category: 兵器谱
 reading_time: 3
 image: /images/dispatch-chip/image-1.webp
+published: false
 ---
 
 古之争衡，粮道不继，则名将亦难远征。今之智能竞逐，算力便是粮道，芯片便是关隘。

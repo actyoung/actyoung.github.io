@@ -4,23 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0d0f0e">
-    {% assign page_description = page.description | default: site.description %}
+    {% if site.under_construction %}
+      {% assign page_description = '赛博志正在编修。我们正整理事实、校订脉络，待篇章成形再与诸君相见。' %}
+    {% else %}
+      {% assign page_description = page.description | default: site.description %}
+    {% endif %}
     <meta name="description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
-    <title>{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-    <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}">
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
-    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
-    <meta property="og:title" content="{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}">
+    <title>{% if site.under_construction %}{{ site.title }} · 正在修志{% else %}{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}{% endif %}</title>
+    <link rel="canonical" href="{% if site.under_construction %}{{ '/' | absolute_url }}{% else %}{{ page.url | replace: 'index.html', '' | absolute_url }}{% endif %}">
+    {% unless site.under_construction %}<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">{% endunless %}
+    <meta property="og:type" content="{% if page.layout == 'post' and site.under_construction != true %}article{% else %}website{% endif %}">
+    <meta property="og:title" content="{% if site.under_construction %}{{ site.title }} · 正在修志{% else %}{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}{% endif %}">
     <meta property="og:description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
-    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:url" content="{% if site.under_construction %}{{ '/' | absolute_url }}{% else %}{{ page.url | absolute_url }}{% endif %}">
     {% assign social_image = page.image | default: '/images/cyber-map/image-1.webp' %}
     <meta property="og:image" content="{{ social_image | absolute_url }}">
     <meta name="twitter:card" content="summary_large_image">
-    {% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
+    {% if site.under_construction %}<meta name="robots" content="noindex, nofollow">{% elsif page.noindex %}<meta name="robots" content="noindex">{% endif %}
     <link rel="icon" type="image/png" href="{{ '/images/blacktocat.png' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
   </head>
-  <body>
+  <body{% if site.under_construction %} class="is-under-construction"{% endif %}>
+    {% if site.under_construction %}
+      {% include construction.html %}
+    {% else %}
     <a class="skip-link" href="#main-content">跳到正文</a>
     <header class="site-header">
       <div class="wide-shell masthead">
@@ -53,5 +60,6 @@
         <p>事实为骨，演义为衣 · 由 GitHub Pages 发布</p>
       </div>
     </footer>
+    {% endif %}
   </body>
 </html>

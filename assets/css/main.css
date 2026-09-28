@@ -188,6 +188,162 @@ a:hover {
   min-height: 60vh;
 }
 
+.is-under-construction {
+  min-height: 100svh;
+  overflow-x: hidden;
+  background: #080a09;
+}
+
+.construction {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  background: rgba(8, 10, 9, 0.68);
+}
+
+.construction__backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.43;
+  filter: saturate(0.72) contrast(1.08);
+}
+
+.construction::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgba(6, 8, 7, 0.4);
+  pointer-events: none;
+}
+
+.construction__frame {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-block: 30px 24px;
+}
+
+.construction__masthead,
+.construction__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+}
+
+.construction__masthead {
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(245, 242, 234, 0.2);
+}
+
+.construction__brand,
+.construction__edition,
+.construction__footer p {
+  margin: 0;
+}
+
+.construction__brand {
+  color: var(--white);
+  font-family: "Songti SC", STSong, "Noto Serif CJK SC", serif;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.construction__edition {
+  text-transform: uppercase;
+}
+
+.construction__notice {
+  width: min(680px, 100%);
+  align-self: center;
+  padding-block: 64px;
+}
+
+.construction__kicker {
+  margin: 0 0 20px;
+  color: var(--brass);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.construction__notice h1 {
+  margin: 0;
+  color: var(--white);
+  font-family: "Songti SC", STSong, "Noto Serif CJK SC", serif;
+  font-size: clamp(64px, 8vw, 112px);
+  font-weight: 800;
+  line-height: 1.04;
+}
+
+.construction__lead {
+  margin: 32px 0 0;
+  color: var(--white);
+  font-family: "Songti SC", STSong, serif;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.construction__copy {
+  max-width: 580px;
+  margin: 10px 0 0;
+  color: #c7c8c1;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.construction__progress {
+  width: min(620px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 34px 0 0;
+  border-top: 1px solid rgba(245, 242, 234, 0.24);
+  border-bottom: 1px solid rgba(245, 242, 234, 0.24);
+}
+
+.construction__progress div {
+  padding: 15px 18px 15px 0;
+}
+
+.construction__progress div + div {
+  padding-left: 18px;
+  border-left: 1px solid rgba(245, 242, 234, 0.18);
+}
+
+.construction__progress dt,
+.construction__progress dd {
+  margin: 0;
+}
+
+.construction__progress dt {
+  color: var(--red-bright);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+}
+
+.construction__progress dd {
+  margin-top: 3px;
+  color: var(--white);
+  font-family: "Songti SC", STSong, serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.construction__footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(245, 242, 234, 0.2);
+}
+
 .chronicle {
   width: min(100%, var(--wide));
   margin-inline: auto;
@@ -982,6 +1138,57 @@ a:hover {
 
   .site-nav a::after {
     bottom: -13px;
+  }
+
+  .construction__frame {
+    padding-block: 20px 18px;
+  }
+
+  .construction__masthead,
+  .construction__footer {
+    font-size: 9px;
+  }
+
+  .construction__brand {
+    font-size: 24px;
+  }
+
+  .construction__notice {
+    padding-block: 40px;
+  }
+
+  .construction__notice h1 {
+    font-size: 54px;
+  }
+
+  .construction__lead {
+    margin-top: 25px;
+    font-size: 21px;
+  }
+
+  .construction__copy {
+    font-size: 14px;
+  }
+
+  .construction__progress div {
+    padding: 13px 8px 13px 0;
+  }
+
+  .construction__progress div + div {
+    padding-left: 9px;
+  }
+
+  .construction__progress dd {
+    font-size: 14px;
+  }
+
+  .construction__footer {
+    align-items: flex-end;
+  }
+
+  .construction__footer p:last-child {
+    max-width: 132px;
+    text-align: right;
   }
 
   .chronicle {

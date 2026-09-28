@@ -6,6 +6,7 @@ description: "开源从来不只是一份代码，它也是人才、标准与分
 category: 势力
 reading_time: 3
 image: /images/dispatch-city/image-1.webp
+published: false
 ---
 
 天下之势，有凭险自守者，也有合众而行者。开源之道，正如合纵：单点未必最强，众力却可沿共同标准迅速汇流。
