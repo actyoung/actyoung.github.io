@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f6f3">
+    {% assign page_description = page.description | default: site.description %}
+    <meta name="description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
+    <title>{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+    <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+    <meta property="og:title" content="{% if page.title and page.title != '首页' %}{{ page.title }} · {% endif %}{{ site.title }}">
+    <meta property="og:description" content="{{ page_description | strip_html | normalize_whitespace | escape }}">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:image" content="https://github.com/actyoung.png?size=460">
+    <meta name="twitter:card" content="summary">
+    {% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <header class="site-header">
+      <div class="shell site-header__inner">
+        <a class="wordmark" href="{{ '/' | relative_url }}" aria-label="小虎的博客首页">
+          <span class="wordmark__mark" aria-hidden="true">虎</span>
+          <span>小虎的博客</span>
+        </a>
+        <nav aria-label="主导航">
+          <a href="{{ '/#articles' | relative_url }}">文章</a>
+          <a href="{{ '/about/' | relative_url }}">关于</a>
+          <a class="nav-github" href="https://github.com/actyoung" rel="me">
+            <img src="{{ '/images/blacktocat.png' | relative_url }}" alt="" width="16" height="16">
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="shell" id="main-content">
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell site-footer__inner">
+        <p>&copy; {{ 'now' | date: '%Y' }} 小虎</p>
+        <p>由 GitHub Pages 发布</p>
+      </div>
+    </footer>
+  </body>
+</html>
+

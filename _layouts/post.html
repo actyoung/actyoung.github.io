@@ -1,0 +1,26 @@
+---
+layout: default
+---
+
+<article class="post">
+  <header class="post__header">
+    <a class="back-link" href="{{ '/#articles' | relative_url }}">&larr; 返回文章列表</a>
+    <p class="eyebrow">ARTICLE</p>
+    <h1>{{ page.title }}</h1>
+    <div class="post__meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y 年 %-m 月 %-d 日" }}</time>
+      {% if page.reading_time %}<span>{{ page.reading_time }} 分钟阅读</span>{% endif %}
+    </div>
+    {% if page.description %}<p class="post__dek">{{ page.description }}</p>{% endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  <footer class="post__footer">
+    <p>感谢阅读。</p>
+    <a class="text-link" href="{{ '/#articles' | relative_url }}">继续浏览文章 <span aria-hidden="true">&rarr;</span></a>
+  </footer>
+</article>
+

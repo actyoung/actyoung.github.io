@@ -1,0 +1,20 @@
+title: 小虎的博客
+description: 小虎的个人博客，记录技术实践、产品思考与持续学习。
+url: https://actyoung.github.io
+baseurl: ""
+lang: zh-CN
+timezone: Asia/Shanghai
+author:
+  name: 小虎
+  github: actyoung
+permalink: /posts/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+
